@@ -126,6 +126,11 @@ async function login(req, res) {
   }
 }
 
+/**
+ * @route GET /auth/api/v1/logout
+ * @description Logout a user
+ * @access Private
+ */
 async function logout(req, res) {
   try {
     const token = req.cookies.token;
@@ -146,11 +151,36 @@ async function logout(req, res) {
       message: "Logout Successful",
       blackListToken,
     });
-  } catch (error) {}
+  } catch (error) { }
+}
+
+
+/**
+ * @route GET /auth/api/v1/getMe
+ * @description Get current user details
+ * @access Private
+ */
+async function getMe(req, res) {
+  try {
+    const user = await userModel.findById(req.user.id)
+
+    res.status(200).json({
+      message: "User details fetch successfully",
+      user: {
+        id: user._id,
+        email: user.email,
+        userName: user.userName
+      }
+
+    })
+  } catch (error) {
+
+  }
 }
 
 module.exports = {
   register,
   login,
   logout,
+  getMe
 };
